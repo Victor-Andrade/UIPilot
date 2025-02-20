@@ -147,8 +147,12 @@ struct NavigationControllerHost<T: Equatable, Screen: View>: UIViewControllerRep
     }
     
     static func dismantleUIViewController(_ navigation: UINavigationController, coordinator: ()) {
-        navigation.viewControllers = []
-        (navigation as! PopAwareUINavigationController).popHandler = nil
+        DispatchQueue.main.async {
+            navigation.viewControllers = []
+            if let popAwareNav = navigation as? PopAwareUINavigationController {
+                popAwareNav.popHandler = nil
+            }
+        }
     }
         
     typealias UIViewControllerType = UINavigationController
